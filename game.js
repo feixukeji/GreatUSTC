@@ -291,15 +291,7 @@
     highestItemImage.src = LEVEL_ASSETS[levelIndex].src;
   }
 
-  function focusCanvas() {
-    try {
-      canvas.focus({ preventScroll: true });
-    } catch (error) {
-      canvas.focus();
-    }
-  }
-
-  function startGame(shouldFocusCanvas) {
+  function startGame() {
     items = [];
     particles = [];
     celebrationParticles = [];
@@ -325,13 +317,9 @@
 
     gameOverOverlay.hidden = true;
     restartConfirmOverlay.hidden = true;
-    canvas.tabIndex = 0;
     newRecordElement.hidden = true;
     updateScoreDisplay(false);
     updateControls();
-    if (shouldFocusCanvas) {
-      focusCanvas();
-    }
   }
 
   function startFailureExplosion() {
@@ -368,7 +356,6 @@
       lastTop: lastTop,
       finishAt: (queue.length > 0 ? queue[queue.length - 1].explodeAt : 0) + FAILURE_SETTLE_DURATION
     };
-    canvas.tabIndex = -1;
     updateControls();
   }
 
@@ -387,9 +374,6 @@
     newRecordElement.hidden = !madeRecord;
     gameOverOverlay.hidden = false;
     playGameOverSound();
-    window.setTimeout(function () {
-      againButton.focus();
-    }, 0);
   }
 
   function limitAimX(value) {
@@ -1548,8 +1532,16 @@
     playTone(185, 0.28, 0.04, "sine", 0.16);
   }
 
-  againButton.addEventListener("click", function () {
-    startGame(true);
+  function addPointerClickListener(element, listener) {
+    element.addEventListener("click", function (event) {
+      if (event.detail > 0) {
+        listener();
+      }
+    });
+  }
+
+  addPointerClickListener(againButton, function () {
+    startGame();
   });
 
   function resetFrameClock() {
@@ -1564,46 +1556,33 @@
     }
     restartConfirmOverlay.hidden = true;
     if (shouldRestart) {
-      startGame(true);
+      startGame();
       return;
     }
     resetFrameClock();
     mode = "playing";
-    canvas.tabIndex = 0;
     updateControls();
-    focusCanvas();
   }
 
-  restartButton.addEventListener("click", function () {
+  addPointerClickListener(restartButton, function () {
     if (mode !== "playing") {
       return;
     }
     mode = "confirming";
     resetFrameClock();
-    canvas.tabIndex = -1;
     updateControls();
     restartConfirmOverlay.hidden = false;
-    window.setTimeout(function () {
-      restartCancelButton.focus();
-    }, 0);
   });
 
-  restartCancelButton.addEventListener("click", function () {
+  addPointerClickListener(restartCancelButton, function () {
     closeRestartConfirm(false);
   });
 
-  restartConfirmButton.addEventListener("click", function () {
+  addPointerClickListener(restartConfirmButton, function () {
     closeRestartConfirm(true);
   });
 
-  document.addEventListener("keydown", function (event) {
-    if (mode === "confirming" && event.key === "Escape") {
-      closeRestartConfirm(false);
-      event.preventDefault();
-    }
-  });
-
-  soundButton.addEventListener("click", function () {
+  addPointerClickListener(soundButton, function () {
     soundEnabled = !soundEnabled;
     updateSoundControl();
     if (soundEnabled) {
@@ -1696,25 +1675,6 @@
     finishPointerGesture(event, false);
   }, { passive: false });
 
-  canvas.addEventListener("keydown", function (event) {
-    if (mode !== "playing") {
-      return;
-    }
-
-    ensureAudio();
-
-    if ((event.key === "ArrowLeft" || event.key === "a" || event.key === "A") && readyToDrop) {
-      aimX = limitAimX(aimX - 15);
-      event.preventDefault();
-    } else if ((event.key === "ArrowRight" || event.key === "d" || event.key === "D") && readyToDrop) {
-      aimX = limitAimX(aimX + 15);
-      event.preventDefault();
-    } else if (event.key === " " || event.key === "Enter" || event.key === "ArrowDown") {
-      dropCurrentItem();
-      event.preventDefault();
-    }
-  });
-
   document.addEventListener("visibilitychange", resetFrameClock);
 
   window.addEventListener("blur", function () {
@@ -1731,6 +1691,6 @@
   applyUiConfig();
   syncCanvasResolution();
   updateSoundControl();
-  startGame(false);
+  startGame();
   window.requestAnimationFrame(animationFrame);
 }());

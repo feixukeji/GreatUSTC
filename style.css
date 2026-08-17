@@ -52,14 +52,9 @@ button {
   appearance: none;
 }
 
-button:focus-visible,
-canvas:focus-visible {
-  outline: 3px solid #6f55c6;
-  outline-offset: 3px;
-}
-
-canvas:focus-visible {
-  outline-offset: -5px;
+button:focus,
+canvas:focus {
+  outline: none;
 }
 
 .app {

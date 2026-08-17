@@ -32,12 +32,13 @@
           class="icon-button"
           id="soundButton"
           type="button"
+          tabindex="-1"
           aria-label="关闭声音"
           aria-pressed="true"
         >
           <span class="sound-icon" id="soundIcon" aria-hidden="true"></span>
         </button>
-        <button class="small-button restart-button" id="restartButton" type="button" disabled>重开</button>
+        <button class="small-button restart-button" id="restartButton" type="button" tabindex="-1" disabled>重开</button>
       </div>
     </header>
 
@@ -46,7 +47,6 @@
         id="gameCanvas"
         width="1024"
         height="1587"
-        tabindex="-1"
       ></canvas>
 
       <div
@@ -70,7 +70,7 @@
             </div>
           </div>
           <p class="new-record" id="newRecord" hidden>新纪录！</p>
-          <button class="primary-button" id="againButton" type="button">再合一次</button>
+          <button class="primary-button" id="againButton" type="button" tabindex="-1">再合一次</button>
         </div>
       </div>
 
@@ -86,8 +86,8 @@
           <h2 id="restartConfirmTitle">重新开始？</h2>
           <p class="confirm-copy">当前进度将会丢失。</p>
           <div class="confirm-actions">
-            <button class="small-button" id="restartCancelButton" type="button">取消</button>
-            <button class="small-button confirm-button" id="restartConfirmButton" type="button">重新开始</button>
+            <button class="small-button" id="restartCancelButton" type="button" tabindex="-1">取消</button>
+            <button class="small-button confirm-button" id="restartConfirmButton" type="button" tabindex="-1">重新开始</button>
           </div>
         </div>
       </div>
