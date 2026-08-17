@@ -1,0 +1,410 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+  color: #29272d;
+  background-color: #f7f4ec;
+  background-image: linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%);
+  font-synthesis: none;
+  line-height: 1.2;
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+html {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  overscroll-behavior: none;
+}
+
+button,
+canvas {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+button {
+  font: inherit;
+  line-height: 1;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+button:focus-visible,
+canvas:focus-visible {
+  outline: 3px solid #6f55c6;
+  outline-offset: 3px;
+}
+
+canvas:focus-visible {
+  outline-offset: -5px;
+}
+
+.app {
+  margin: 0 auto;
+  padding: 4px 0 8px;
+}
+
+.topbar {
+  position: relative;
+  z-index: 10;
+  height: 52px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: 4px;
+  padding: 0 9px;
+}
+
+.brand {
+  min-width: 0;
+}
+
+.brand h1 {
+  margin: 0;
+  overflow: hidden;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.brand p {
+  margin: 3px 0 0;
+  color: #716a61;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.metric {
+  min-width: 44px;
+  height: 42px;
+  padding: 3px 4px;
+  border-radius: 12px;
+  background-color: #eef1f5;
+  background-image: radial-gradient(circle, #eef1f5 0%, #e6e9f0 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.metric span {
+  color: #716a61;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.metric strong {
+  font-size: 16px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.metric-score strong {
+  color: #6650b7;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.board {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 20 / 31;
+  overflow: hidden;
+  color-scheme: only light;
+  forced-color-adjust: none;
+  background-color: #fffdf8;
+  background-image: linear-gradient(to top, #96fbc4 0%, #f9f586 100%);
+  isolation: isolate;
+}
+
+#gameCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  padding: 22px;
+  background-color: rgba(255, 253, 248, 0.94);
+  display: grid;
+  place-items: center;
+}
+
+.overlay-card {
+  width: 100%;
+  max-width: 326px;
+  padding: 25px 23px 23px;
+  border: 1px solid #dcd5c8;
+  border-radius: 24px;
+  background-color: #fffdf8;
+  box-shadow: 0 14px 34px rgba(55, 47, 36, 0.12);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #6f55c6;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.overlay h2 {
+  margin: 0;
+  font-size: 27px;
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+}
+
+.primary-button,
+.small-button,
+.icon-button {
+  cursor: pointer;
+  transition: transform 100ms ease, opacity 100ms ease, filter 100ms ease;
+}
+
+.primary-button:active,
+.small-button:active,
+.icon-button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.primary-button {
+  width: 100%;
+  min-height: 49px;
+  border-radius: 15px;
+  background-color: #6f55c6;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  box-shadow: 0 5px 0 #503c97;
+}
+
+.game-over-card h2 {
+  margin-bottom: 18px;
+}
+
+.result-row {
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.result-row > div {
+  padding: 11px 8px;
+  border-radius: 13px;
+  background-color: #f2eee5;
+}
+
+.result-row > div > span {
+  display: block;
+  margin-bottom: 2px;
+  color: #6f685f;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.result-row > div > strong {
+  display: block;
+  color: #4c3b87;
+  font-size: 20px;
+}
+
+.highest-item {
+  width: 64px;
+  height: 64px;
+  margin: 4px auto 0;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: #fdfbfb;
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  display: grid;
+  place-items: center;
+}
+
+.highest-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.new-record {
+  margin: -4px 0 13px;
+  color: #b83240;
+  font-weight: 800;
+}
+
+.small-button,
+.icon-button {
+  height: 42px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  background-color: #eef1f5;
+  background-image: radial-gradient(circle, #eef1f5 0%, #e6e9f0 100%);
+  color: #4e4a45;
+}
+
+.small-button:disabled {
+  cursor: default;
+  opacity: 0.42;
+  transform: none;
+}
+
+.icon-button {
+  width: 42px;
+  min-width: 42px;
+  display: grid;
+  place-items: center;
+}
+
+.restart-button {
+  min-width: 46px;
+  padding: 0 6px;
+}
+
+.sound-icon {
+  position: relative;
+  width: 20px;
+  height: 18px;
+  display: block;
+}
+
+.sound-icon::before {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 13px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-clip-path: polygon(0 36%, 30% 36%, 72% 5%, 72% 95%, 30% 64%, 0 64%);
+  clip-path: polygon(0 36%, 30% 36%, 72% 5%, 72% 95%, 30% 64%, 0 64%);
+  content: "";
+}
+
+.sound-icon::after {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  width: 6px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-radius: 0 50% 50% 0;
+  content: "";
+}
+
+.sound-icon.is-muted::after {
+  top: 8px;
+  right: 0;
+  width: 19px;
+  height: 2px;
+  border: 0;
+  border-radius: 999px;
+  background-color: currentColor;
+  transform: rotate(-45deg);
+}
+
+.confirm-card h2 {
+  margin-bottom: 10px;
+}
+
+.confirm-copy {
+  margin: 0 0 18px;
+  color: #716a61;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.confirm-button {
+  background-color: #6f55c6;
+  background-image: none;
+  color: #fff;
+}
+
+/* 手机使用上面的默认全宽布局；电脑端只限制游戏区域的最大宽度。 */
+@media (min-width: 449px) {
+  .app {
+    max-width: 420px;
+  }
+}
+
+@media (min-width: 449px) and (hover: hover) and (pointer: fine) {
+  .primary-button:hover {
+    filter: brightness(1.05);
+  }
+
+  .small-button:hover:not(:disabled),
+  .icon-button:hover {
+    filter: brightness(0.97);
+  }
+}
+
+@supports not (aspect-ratio: 1 / 1) {
+  .board::before {
+    display: block;
+    padding-top: 155%;
+    content: "";
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}

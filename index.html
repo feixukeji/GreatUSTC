@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fdfbfb">
+  <meta id="pageDescription" name="description" content="高校校徽合成小游戏">
+  <title>合成中科大</title>
+  <link rel="icon" href="assets/badges/ustc.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1 id="gameTitle">合成中科大</h1>
+        <p>左右拖动·松手落下</p>
+      </div>
+
+      <div class="metric metric-score">
+        <span>得分</span>
+        <strong id="score">0</strong>
+      </div>
+
+      <div class="metric">
+        <span>最高</span>
+        <strong id="bestScore">0</strong>
+      </div>
+
+      <div class="header-actions">
+        <button
+          class="icon-button"
+          id="soundButton"
+          type="button"
+          aria-label="关闭声音"
+          aria-pressed="true"
+        >
+          <span class="sound-icon" id="soundIcon" aria-hidden="true"></span>
+        </button>
+        <button class="small-button restart-button" id="restartButton" type="button" disabled>重开</button>
+      </div>
+    </header>
+
+    <div class="board">
+      <canvas
+        id="gameCanvas"
+        width="1024"
+        height="1587"
+        tabindex="-1"
+      ></canvas>
+
+      <div
+        class="overlay"
+        id="gameOverOverlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gameOverMessage"
+        hidden
+      >
+        <div class="overlay-card game-over-card">
+          <p class="eyebrow">本局结束</p>
+          <h2 id="gameOverMessage">差一点就更大了</h2>
+          <div class="result-row">
+            <div><span>本局得分</span><strong id="finalScore">0</strong></div>
+            <div>
+              <span>最高等级</span>
+              <div class="highest-item">
+                <img id="highestItemImage" alt="">
+              </div>
+            </div>
+          </div>
+          <p class="new-record" id="newRecord" hidden>新纪录！</p>
+          <button class="primary-button" id="againButton" type="button">再合一次</button>
+        </div>
+      </div>
+
+      <div
+        class="overlay"
+        id="restartConfirmOverlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="restartConfirmTitle"
+        hidden
+      >
+        <div class="overlay-card confirm-card">
+          <h2 id="restartConfirmTitle">重新开始？</h2>
+          <p class="confirm-copy">当前进度将会丢失。</p>
+          <div class="confirm-actions">
+            <button class="small-button" id="restartCancelButton" type="button">取消</button>
+            <button class="small-button confirm-button" id="restartConfirmButton" type="button">重新开始</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="game-config.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
