@@ -47,6 +47,7 @@
   var HIGHEST_CELEBRATION_DURATION = 3.2;
   var FAILURE_SWEEP_DURATION = 1.25;
   var FAILURE_SETTLE_DURATION = 0.76;
+  var MACHINE_VERSION = 1;
 
   var DEFAULT_RADII = [13, 17, 22, 28, 35, 43, 51, 60, 70, 80, 91];
   var DEFAULT_COLORS = ["#e84d5b", "#f26b73", "#8f6ccf", "#ff9f43", "#f3cc30", "#79b94f", "#df4b3f", "#f38ba7", "#e5ab33", "#a77757", "#39ad65"];
@@ -1532,6 +1533,98 @@
     playTone(185, 0.28, 0.04, "sine", 0.16);
   }
 
+  function makeMachineError(code, message) {
+    var error = new Error(message);
+    error.code = code;
+    return error;
+  }
+
+  function machineVersion() {
+    return MACHINE_VERSION;
+  }
+
+  function machineLevels() {
+    return LEVELS.map(function (level) {
+      return {
+        radius: level.radius,
+        score: level.score
+      };
+    });
+  }
+
+  function machineLegalActions() {
+    if (mode !== "playing" || !readyToDrop) {
+      return [];
+    }
+    var radius = LEVELS[currentLevel].radius;
+    return [{
+      type: "drop",
+      minX: LEFT_WALL + radius,
+      maxX: RIGHT_WALL - radius
+    }];
+  }
+
+  function machineObservation() {
+    return {
+      mode: mode,
+      canAct: mode === "playing" && readyToDrop,
+      score: score,
+      nextLevel: mode === "playing" && readyToDrop ? currentLevel : null,
+      dropCooldown: Math.max(0, dropCooldown),
+      danger: {
+        near: dangerIsNear,
+        crossed: dangerIsCrossed,
+        timer: dangerTimer
+      },
+      board: {
+        width: WORLD_WIDTH,
+        height: WORLD_HEIGHT,
+        dangerLine: DANGER_LINE,
+        levels: machineLevels()
+      },
+      items: items.map(function (body) {
+        return {
+          id: body.id,
+          level: body.level,
+          x: body.x,
+          y: body.y,
+          vx: body.vx,
+          vy: body.vy
+        };
+      })
+    };
+  }
+
+  function machineAct(action) {
+    if (!action || typeof action !== "object" || Array.isArray(action)) {
+      throw makeMachineError("INVALID_ARGUMENT", "action 必须是对象。");
+    }
+    if (action.type !== "drop") {
+      throw makeMachineError("UNSUPPORTED_ACTION", "当前只支持 drop 动作。");
+    }
+    if (mode !== "playing" || !readyToDrop) {
+      throw makeMachineError("ILLEGAL_ACTION", "当前状态不能投放物体。");
+    }
+    if (!Number.isFinite(action.x)) {
+      throw makeMachineError("INVALID_ARGUMENT", "drop.x 必须是有限数字。");
+    }
+
+    var minimumX = LEFT_WALL + LEVELS[currentLevel].radius;
+    var maximumX = RIGHT_WALL - LEVELS[currentLevel].radius;
+    if (action.x < minimumX || action.x > maximumX) {
+      throw makeMachineError("INVALID_ARGUMENT", "drop.x 超出当前物体的合法范围。");
+    }
+
+    aimX = action.x;
+    dropCurrentItem();
+    return machineObservation();
+  }
+
+  function machineReset() {
+    startGame();
+    return machineObservation();
+  }
+
   function addPointerClickListener(element, listener) {
     element.addEventListener("click", function (event) {
       if (event.detail > 0) {
@@ -1692,5 +1785,12 @@
   syncCanvasResolution();
   updateSoundControl();
   startGame();
+  window.MERGE_GAME_MACHINE = Object.freeze({
+    version: machineVersion,
+    observe: machineObservation,
+    legalActions: machineLegalActions,
+    act: machineAct,
+    reset: machineReset
+  });
   window.requestAnimationFrame(animationFrame);
 }());
